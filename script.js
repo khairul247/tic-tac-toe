@@ -50,6 +50,7 @@ const Game = () => {
     }
 
     const reset = () => {
+        gameCount = 0;
         currentPlayerIndex = 0;
         gameWon = false;
         dashboard.textContent = `${player1name}'s Turn`;
