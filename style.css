@@ -1,11 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
 
 body {
     height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     gap: 25px;
+    justify-content: center;
+    font-family: 'Roboto Mono', sans-serif;
+
 }
 
 img {
@@ -13,17 +16,35 @@ img {
     height: 75%;
 }
 
-.wrapper {
+button {
+    font-family: 'Roboto Mono', sans-serif;
+}
+
+.boardgame {
     display: grid;
     grid-template-columns: repeat(3,100px);
     grid-template-rows: repeat(3,100px);
-    gap: 10px;
-
 }
 
 .cell {
-    border: 1px solid black;
+    background-color: white;
     display: flex;
     align-items: center;
     justify-content: center;
+    border: 5px solid red; /* Add thick border to each cell */
+    box-sizing: border-box; /* Ensure borders are included in the size */
+}
+
+/* Remove borders for the edges to avoid double-thick lines */
+.cell:nth-child(1), .cell:nth-child(2), .cell:nth-child(3) {
+    border-top: none;
+}
+.cell:nth-child(1), .cell:nth-child(4), .cell:nth-child(7) {
+    border-left: none;
+}
+.cell:nth-child(7), .cell:nth-child(8), .cell:nth-child(9) {
+    border-bottom: none;
+}
+.cell:nth-child(3), .cell:nth-child(6), .cell:nth-child(9) {
+    border-right: none;
 }

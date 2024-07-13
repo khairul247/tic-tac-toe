@@ -1,5 +1,4 @@
 
-
 const createPlayer = (name, mark) => {
 
     let choiceArray = [];
@@ -14,51 +13,65 @@ const createPlayer = (name, mark) => {
 
 const Game = () => {
 
-    let clickCount = 0;
+    let gameCount = 0;
     let currentPlayerIndex = 0;
+    let gameWon = false;
+
+    const player1name = prompt("Player 1's name: ");
+    const player2name = prompt("Player 2's name: ");
+
     let players = [
-        createPlayer("Player 1", "X"),
-        createPlayer("Player 2", "O"),
+        createPlayer(player1name, "X"),
+        createPlayer(player2name, "O"),
     ]
 
+    const dashboard =document.querySelector("p");
+    dashboard.textContent = `${player1name}'s Turn`;
 
 
     const handleClick = (event) => {
-        
-        const crossImg = document.createElement("img");
-        const circleImg = document.createElement("img");
-        crossImg.src = "cross.png";
-        circleImg.src = "circle.png";
-        const cell = document.getElementById(`${event.target.id}`);
-        if (currentPlayerIndex === 0){
-            cell.appendChild(crossImg)
-        } else {
-            cell.appendChild(circleImg)
-        }
+
+        gameCount++;
+        addMark();
         players[currentPlayerIndex].choiceArray.push(Number(event.target.id));
         checkForWinner(players[currentPlayerIndex].choiceArray);
-        switchPlayer();
-        clickCount++;
-        if (clickCount === 9) {
-            console.log("No one wins")
-            reset();
+        if (!gameWon) {
+            if(gameCount == 9){
+                dashboard.textContent = "No one wins! It's a tie."
+            } else {
+            switchPlayer();
+            }
         }
     }
 
     const switchPlayer = () => {
         currentPlayerIndex = currentPlayerIndex === 0 ? 1 : 0;
+        dashboard.textContent =`${players[currentPlayerIndex].name}'s Turn`;
     }
 
     const reset = () => {
-        clickCount = 0;
+        currentPlayerIndex = 0;
+        gameWon = false;
+        dashboard.textContent = `${player1name}'s Turn`;
         const cells = document.querySelectorAll(".cell");
         cells.forEach(cell => {
             cell.addEventListener("click", handleClick, {once:true})
         });
+
+        cells.forEach(cell => {
+            const img = cell.querySelector("img");
+            if (img) {
+            cell.removeChild(img);
+            }
+        })
+
         players.forEach(player => player.choiceArray = []);
         currentPlayerIndex = 0;
         console.log("Game reset")
     }
+
+    const resetBtn = document.querySelector(".restart");
+    resetBtn.addEventListener("click",reset)
 
     const start = () => {
 
@@ -70,8 +83,6 @@ const Game = () => {
     }
 
     const checkForWinner = (array) => {
-
-        console.log(array);
 
         const winParameter = [
             [0, 1, 2],
@@ -88,11 +99,33 @@ const Game = () => {
             let combination = winParameter[i];
     
             if (combination.every(element => array.includes(element))){
-                console.log(`${players[currentPlayerIndex].name} wins!`)
+                dashboard.textContent=`${players[currentPlayerIndex].name} Wins!`;
+                gameWon = true;
+                removeEvents();
                 break
-            }
+            } 
         }
     
+    }
+
+    const addMark = () => {
+        const crossImg = document.createElement("img");
+        const circleImg = document.createElement("img");
+        crossImg.src = "cross.png";
+        circleImg.src = "circle.png";
+        const cell = document.getElementById(`${event.target.id}`);
+        if (currentPlayerIndex === 0){
+            cell.appendChild(crossImg)
+        } else {
+            cell.appendChild(circleImg)
+        }
+    }
+
+    const removeEvents = () => {
+        const cells = document.querySelectorAll(".cell");
+        cells.forEach(cell => {
+            cell.removeEventListener("click", handleClick);
+        })
     }
 
     return {
@@ -103,4 +136,5 @@ const Game = () => {
 }
 
 const game = Game();
-game.start()
+game;
+game.start();
